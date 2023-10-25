@@ -5,6 +5,11 @@ package com.cdanielvalente.androidmaster
  * Variables
  */
 fun main() {
+    variablesNumericas();
+    println( stringText("HOLA MUNDO"));
+}
+
+fun variablesNumericas () {
     /**
      * Variables Numericas
      */
@@ -19,17 +24,6 @@ fun main() {
     val doubleExample: Double = 3.1416;
 
     /**
-     * Variables Alfanúmericas
-     */
-    //Char
-    val character: Char = 'a';
-    //String
-    val name: String = "cdanielvalente";
-
-    //Boolean
-    val flag: Boolean = true;
-
-    /**
      * Utilidad de variables
      */
     println( age + age1);
@@ -37,5 +31,23 @@ fun main() {
     println( age * age1 );
     println( age / age1 );
     println( age % age1 );
+}
 
+fun variablesAlfanumericas () {
+    /**
+     * Variables Alfanúmericas
+     */
+    //Char
+    val character: Char = 'a';
+    //String
+    val name: String = "cdanielvalente";
+}
+
+fun stringText (test: String): String {
+    return test;
+}
+
+fun variablesBoolean () {
+    //Boolean
+    val flag: Boolean = true;
 }
