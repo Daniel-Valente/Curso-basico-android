@@ -1,4 +1,4 @@
-package com.cdanielvalente.androidmaster
+package com.cdanielvalente.androidmaster.exercises
 
 fun main () {
 
