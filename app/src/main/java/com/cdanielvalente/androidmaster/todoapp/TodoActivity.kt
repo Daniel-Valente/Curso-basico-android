@@ -15,6 +15,7 @@ class TodoActivity : AppCompatActivity() {
         Personal,
         Other
     );
+
     private val tasks = mutableListOf(
         Task("Prueba Business", Business),
         Task("Prueba Personal", Personal),
