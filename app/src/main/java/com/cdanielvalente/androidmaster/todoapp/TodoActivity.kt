@@ -3,6 +3,11 @@ package com.cdanielvalente.androidmaster.todoapp
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cdanielvalente.androidmaster.R
@@ -45,12 +50,12 @@ class TodoActivity : AppCompatActivity() {
     };
 
     private fun initUI() {
-        categoryAdapter = CategoriesAdapter(categories);
+        categoryAdapter = CategoriesAdapter(categories) { position -> updateCategories(position) };
         rvCategories.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rvCategories.adapter = categoryAdapter;
 
-        tasksAdapter = TasksAdapter(tasks);
+        tasksAdapter = TasksAdapter(tasks) { onItemSelected(it) };
         rvTasks.layoutManager = LinearLayoutManager(this);
         rvTasks.adapter = tasksAdapter;
     }
@@ -62,6 +67,48 @@ class TodoActivity : AppCompatActivity() {
     private fun showDialog() {
         val dialog = Dialog(this);
         dialog.setContentView(R.layout.dialog_task);
+
+        val etTask: EditText = dialog.findViewById(R.id.etTask);
+        val rgCategories: RadioGroup = dialog.findViewById(R.id.rgCategories);
+        val btnAddTask: AppCompatButton = dialog.findViewById(R.id.btnAddTask);
+
+        btnAddTask.setOnClickListener {
+            val currentTask = etTask.text.toString();
+            if (currentTask.isNotEmpty()) {
+                val selectedId = rgCategories.checkedRadioButtonId;
+                val selectedRadioButton: RadioButton = rgCategories.findViewById(selectedId);
+
+                val currentCategory: TaskCategory = when (selectedRadioButton.text) {
+                    getString(R.string.todo_dialog_category_business) -> Business
+                    getString(R.string.todo_dialog_category_personal) -> Personal
+                    else -> Other
+                }
+
+                tasks.add(Task(currentTask, currentCategory));
+                updateTasks();
+                dialog.hide();
+            }
+        };
+
         dialog.show();
+    }
+
+    private fun updateTasks() {
+        val selectedCategories: List<TaskCategory> = categories.filter { it.isSelected };
+        val newTasks = tasks.filter { selectedCategories.contains( it.category ) };
+
+        tasksAdapter.tasks = newTasks;
+        tasksAdapter.notifyDataSetChanged();
+    }
+
+    private fun updateCategories(position: Int) {
+        categories[position].isSelected = !categories[position].isSelected;
+        categoryAdapter.notifyItemChanged(position);
+        updateTasks();
+    }
+
+    private fun onItemSelected(position: Int) {
+        tasks[position].isSelected = !tasks[position].isSelected;
+        updateTasks();
     }
 }
